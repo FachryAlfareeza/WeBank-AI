@@ -1,0 +1,7 @@
+month,merchant_id,merchant_name,gross_revenue_rmb,total_expenses_rmb,supplier_invoices_efapiao_rmb,net_cash_flow_rmb
+2026-04,MERCH_SH_88921,Xingfu Coffee Shop,91496.87,56222.03,39355.42,35274.84
+2026-05,MERCH_SH_88921,Xingfu Coffee Shop,92559.73,63025.88,44118.12,29533.85
+2026-06,MERCH_SH_88921,Xingfu Coffee Shop,86351.56,52729.24,36910.47,33622.32
+2026-07,MERCH_SH_88921,Xingfu Coffee Shop,99117.66,64495.6,45146.92,34622.06
+2026-08,MERCH_SH_88921,Xingfu Coffee Shop,84694.9,54348.92,38044.24,30345.98
+2026-09,MERCH_SH_88921,Xingfu Coffee Shop,84737.54,50958.68,35671.08,33778.86

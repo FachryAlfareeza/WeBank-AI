@@ -1,0 +1,7 @@
+month,merchant_id,merchant_name,gross_revenue_rmb,total_expenses_rmb,supplier_invoices_efapiao_rmb,net_cash_flow_rmb
+2026-04,MERCH_BJ_44102,Lianhua Mini Mart,43668.96,29453.38,20617.37,14215.58
+2026-05,MERCH_BJ_44102,Lianhua Mini Mart,44176.23,32731.11,22911.78,11445.12
+2026-06,MERCH_BJ_44102,Lianhua Mini Mart,41213.24,27639.02,19347.31,13574.22
+2026-07,MERCH_BJ_44102,Lianhua Mini Mart,47306.16,33620.36,23534.25,13685.8
+2026-08,MERCH_BJ_44102,Lianhua Mini Mart,40422.57,28364.61,19855.23,12057.96
+2026-09,MERCH_BJ_44102,Lianhua Mini Mart,40442.92,26747.77,18723.44,13695.15

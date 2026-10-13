@@ -1,0 +1,10 @@
+# Backend dependencies
+fastapi==0.115.5
+uvicorn[standard]==0.32.1
+pydantic==2.10.3
+python-multipart==0.0.17
+
+# The engine (import copilot_engine). Install the ai package or add it to
+# PYTHONPATH; these are its runtime deps:
+pandas==2.2.3
+numpy==2.1.3

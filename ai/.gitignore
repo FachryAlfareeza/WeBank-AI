@@ -1,0 +1,6 @@
+.venv
+__pycache__/
+*.pyc
+.env
+# model weights are pulled from HF Hub at runtime, not committed
+*.safetensors

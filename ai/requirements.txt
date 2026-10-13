@@ -1,0 +1,11 @@
+# Core engine dependencies (rule engine — no GPU required)
+pandas==2.2.3
+numpy==2.1.3
+
+# Optional LLM explanation layer (orchestrator_v2) — needs a GPU (~2.5GB VRAM)
+# Uncomment to enable the Qwen2.5-1.5B LoRA adapter:
+# transformers==4.46.3
+# peft==0.13.2
+# bitsandbytes==0.44.1
+# accelerate==1.1.1
+# torch   # install the build matching your CUDA version
