@@ -2,10 +2,29 @@
 pandas==2.2.3
 numpy==2.1.3
 
-# Optional LLM explanation layer (orchestrator_v2) — needs a GPU (~2.5GB VRAM)
-# Uncomment to enable the Qwen2.5-1.5B LoRA adapter:
-# transformers==4.46.3
-# peft==0.13.2
-# bitsandbytes==0.44.1
-# accelerate==1.1.1
-# torch   # install the build matching your CUDA version
+# ----------------------------------------------------------------------------
+# Optional LLM explanation layer (orchestrator_v2) — Qwen2.5-1.5B QLoRA adapter.
+# Verified working on an RTX 4060 Laptop GPU (8GB VRAM), CUDA 12.4 build.
+#
+# IMPORTANT: install torch FIRST from the CUDA wheel index (plain PyPI torch is
+# CPU-only and will not use the GPU):
+#   pip install torch --index-url https://download.pytorch.org/whl/cu124
+#
+# Then install the rest with:  pip install -r requirements.txt
+# ----------------------------------------------------------------------------
+
+# peft must be >= 0.17 — the adapter config uses `alora_invocation_tokens`,
+# which older peft (0.13) rejects.
+peft==0.17.1
+transformers==4.57.1
+accelerate==1.1.1
+
+# bitsandbytes needs a Windows-compatible build (0.44.x has no Windows wheel):
+bitsandbytes==0.45.0
+
+# Qwen tokenizer requirements:
+protobuf==7.36.2
+sentencepiece==0.2.2
+
+# Faster/more reliable Hugging Face downloads:
+hf_xet==1.7.0

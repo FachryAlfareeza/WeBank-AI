@@ -845,8 +845,14 @@ class WeiyedaiLLMBridge:
             self.model.eval()
             self.model.config.use_cache = True
 
+            # Load the tokenizer from the BASE model, not the adapter repo.
+            # The adapter's tokenizer_config.json stores `extra_special_tokens`
+            # as a list, which transformers >= 4.5x rejects with
+            # "'list' object has no attribute 'keys'". The LoRA adapter does not
+            # change the vocab, so the base tokenizer is equivalent and loads
+            # cleanly on current library versions.
             self.tokenizer = AutoTokenizer.from_pretrained(
-                self.HF_REPO_ID,
+                self.BASE_MODEL_ID,
                 trust_remote_code=True
             )
             self.tokenizer.pad_token = self.tokenizer.eos_token
