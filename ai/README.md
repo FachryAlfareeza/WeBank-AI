@@ -7,6 +7,9 @@ The conversational agent, its multi-agent rule engine, and the optional LLM laye
 | File | Purpose |
 |------|---------|
 | `copilot_engine.py` | The full engine — all agents, ZKP, orchestrator, PIPL kill switch, LLM bridge |
+| `llm_config.py` | Reads LLM device/CUDA/remote settings from env/`.env` (no code edits needed) |
+| `remote_llm.py` | OpenAI-compatible client for running the model on a remote GPU |
+| `.env.example` | Template for your local LLM hardware config — copy to `.env` |
 | `data/sample_data_xingfu_coffee.csv` | Demo scenario 1 (APPROVED) |
 | `data/sample_data_lianhua_mart.csv` | Demo scenario 2 (ADJUSTMENT_REQUIRED) |
 | `frontend_integration_guide.md` | Full `result` dict field reference for the UI |
@@ -82,6 +85,58 @@ result = orchestrator.process_application_session(
 )
 print(result["status"])  # APPROVED | ADJUSTMENT_REQUIRED | REJECTED_SECURITY_VIOLATION
 ```
+
+### Configuring the LLM layer (CUDA / CPU / remote GPU) — no code edits
+
+Every hardware decision for the optional LLM layer is read from environment
+variables (or an `ai/.env` file), so you tune it for your machine without
+touching `copilot_engine.py`. Copy the template and edit it:
+
+```powershell
+Copy-Item .env.example .env   # then edit .env
+```
+
+Key settings (see `.env.example` for the full list):
+
+| Variable | Values | What it does |
+|----------|--------|--------------|
+| `WEIYEDAI_LLM_BACKEND` | `local` \| `remote` | Run on this machine, or call a remote GPU endpoint |
+| `WEIYEDAI_LLM_DEVICE` | `auto` \| `cuda` \| `cuda:0` \| `cpu` | Which local device to use |
+| `WEIYEDAI_LLM_LOAD_IN_4BIT` | `true` \| `false` | 4-bit QLoRA quantization (needs CUDA) |
+| `WEIYEDAI_LLM_TORCH_DTYPE` | `float16` \| `bfloat16` \| `float32` | Compute dtype |
+| `WEIYEDAI_LLM_CUDA_VISIBLE_DEVICES` | e.g. `0` or `0,1` | Restrict visible GPUs |
+| `WEIYEDAI_LLM_REMOTE_BASE_URL` | e.g. `http://host:8000/v1` | Remote OpenAI-compatible endpoint |
+| `WEIYEDAI_LLM_REMOTE_API_KEY` | token | Auth for the remote endpoint (if needed) |
+| `WEIYEDAI_LLM_REMOTE_MODEL` | model name | Model served by the remote endpoint |
+
+Common recipes:
+
+```ini
+# Pin to the first GPU, 4-bit (the default verified RTX 4060 setup)
+WEIYEDAI_LLM_BACKEND=local
+WEIYEDAI_LLM_DEVICE=cuda:0
+
+# No GPU on this laptop — run on CPU
+WEIYEDAI_LLM_BACKEND=local
+WEIYEDAI_LLM_DEVICE=cpu
+
+# Use a remote GPU box running vLLM / Ollama / LM Studio
+WEIYEDAI_LLM_BACKEND=remote
+WEIYEDAI_LLM_REMOTE_BASE_URL=http://192.168.1.50:8000/v1
+WEIYEDAI_LLM_REMOTE_MODEL=Qwen/Qwen2.5-1.5B-Instruct
+```
+
+With the **remote** backend, no model is loaded locally and no `torch` / CUDA
+is required — requests go to the endpoint over HTTP. Any server speaking the
+OpenAI `/v1/chat/completions` schema works (vLLM, TGI, Ollama, LM Studio, Groq,
+Together, OpenRouter, OpenAI). Check your config without starting a model:
+
+```powershell
+python llm_config.py   # prints the resolved backend/device summary
+```
+
+Defaults (no `.env`, no env vars) keep the original behavior: `local`, `auto`
+device, 4-bit, `float16`.
 
 ### LLM path (GPU)
 
