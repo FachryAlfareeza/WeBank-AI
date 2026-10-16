@@ -57,6 +57,27 @@ Sample files: `sample_data_xingfu_coffee.csv` (approved), `sample_data_lianhua_m
 
 ## Getting started
 
+**Fastest path — no manual config, no directory-hopping.** From the repo root:
+
+```powershell
+.\setup.ps1     # one-shot: venvs, engine wiring, .env files, npm install
+.\demo.ps1      # run the engine on the sample data (no servers)
+```
+
+Then run the full stack in two terminals:
+
+```powershell
+.\start-backend.ps1        # FastAPI engine on http://localhost:8000
+.\start-frontend.ps1 -Live # React UI wired to the backend (http://localhost:5173)
+```
+
+Drop `-Live` to run the UI against its built-in mock (no backend needed). See
+[`QUICKSTART.md`](QUICKSTART.md) for the full walkthrough, flags, and
+troubleshooting.
+
+<details>
+<summary>Manual setup (if you'd rather do each piece by hand)</summary>
+
 ### Frontend
 ```bash
 cd frontend
@@ -80,6 +101,9 @@ cd ai
 python -m venv .venv && .venv\Scripts\activate
 pip install -r requirements.txt   # add transformers/peft/bitsandbytes/accelerate for the LLM layer
 ```
+Configure the LLM device / remote GPU via `ai/.env` — see `ai/README.md`.
+
+</details>
 
 ## Team
 
