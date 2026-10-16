@@ -9,6 +9,10 @@ export function KillSwitchCard({ receipt }: { receipt: KillSwitchReceipt }) {
         {receipt.logs_wiped} logs and {receipt.cache_entries_wiped} cache entries wiped.
         Session data destroyed permanently.
       </p>
+      <p className="card__text card__text--privacy">
+        🔒 Nothing was stored. This session left no trace of your financial data
+        (PIPL compliant).
+      </p>
       <div className="card__sources">{receipt.pipl_compliance}</div>
     </div>
   );

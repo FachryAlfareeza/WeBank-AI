@@ -3,6 +3,7 @@ import { useCopilotSession } from "@/hooks/useCopilotSession";
 import { ChatWindow } from "@/components/chat/ChatWindow";
 import { Composer } from "@/components/chat/Composer";
 import { StatusBadge } from "@/components/layout/StatusBadge";
+import { SessionStepper } from "@/components/layout/SessionStepper";
 import { DatasetPicker } from "@/components/layout/DatasetPicker";
 import { USE_MOCKS } from "@/services/api";
 
@@ -18,6 +19,9 @@ export default function App() {
           <p className="app__subtitle">
             Cash-flow simulator for MSMEs — not financial advice
           </p>
+          <span className="app__privacy-badge" title="Zero-Knowledge Proof + PIPL event-kill switch">
+            🔒 Anonymous · Zero-Knowledge · data purged each session
+          </span>
         </div>
         <div className="app__header-right">
           <StatusBadge status={result?.status ?? null} />
@@ -26,11 +30,14 @@ export default function App() {
             className="app__reset"
             onClick={reset}
             title="Event-kill switch (PIPL)"
+            aria-label="Start a new session and wipe all current session data (PIPL event-kill switch)"
           >
             New session
           </button>
         </div>
       </header>
+
+      <SessionStepper result={result} />
 
       <DatasetPicker value={dataset} onChange={setDataset} onUsePrompt={setDraft} />
 

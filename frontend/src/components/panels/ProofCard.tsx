@@ -10,6 +10,10 @@ export function ProofCard({ proof, verified }: { proof: ZkpProof; verified: bool
       <p className="card__text">
         Proven DSCR ≥ {proof.dscr_threshold_proven} and amount within ceiling, without exposing raw revenue.
       </p>
+      <p className="card__text card__text--privacy">
+        🔒 Your real revenue figures never leave your device. WeBank only sees an
+        anonymous proof (<strong>{proof.merchant_pseudonym}</strong>) that you qualify.
+      </p>
       <div className="card__grid">
         <div>
           <span className="card__label">DSCR satisfied</span>
