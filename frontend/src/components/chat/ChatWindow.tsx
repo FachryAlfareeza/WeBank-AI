@@ -15,12 +15,18 @@ export function ChatWindow({ messages, thinking }: Props) {
   }, [messages, thinking]);
 
   return (
-    <div className="chat-window">
+    <div
+      className="chat-window"
+      role="log"
+      aria-live="polite"
+      aria-relevant="additions"
+      aria-label="Conversation with the loan copilot"
+    >
       {messages.map((m) => (
         <MessageBubble key={m.id} message={m} />
       ))}
       {thinking && (
-        <div className="chat-thinking" aria-live="polite">
+        <div className="chat-thinking" aria-live="assertive">
           Copilot is thinking…
         </div>
       )}

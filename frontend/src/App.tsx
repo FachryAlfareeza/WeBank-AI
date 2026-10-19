@@ -1,50 +1,66 @@
-import { useState } from "react";
-import { useCopilotSession } from "@/hooks/useCopilotSession";
-import { ChatWindow } from "@/components/chat/ChatWindow";
-import { Composer } from "@/components/chat/Composer";
-import { StatusBadge } from "@/components/layout/StatusBadge";
-import { DatasetPicker } from "@/components/layout/DatasetPicker";
-import { USE_MOCKS } from "@/services/api";
+import { useCallback, useState } from "react";
+import type { SessionResult } from "@/types";
+import type { LoanApplication } from "@/types/dashboard";
+import { useDashboard } from "@/hooks/useDashboard";
+import { Dashboard } from "@/components/dashboard/Dashboard";
+import { CopilotView } from "@/components/CopilotView";
+import { applicationFromResult } from "@/services/applicationFactory";
+
+type View = "dashboard" | "copilot";
 
 export default function App() {
-  const { messages, dataset, setDataset, thinking, result, send, reset } = useCopilotSession();
-  const [draft, setDraft] = useState("");
+  const {
+    merchants,
+    activeMerchant,
+    activeApplications,
+    selectMerchant,
+    addApplication,
+    updateApplication,
+  } = useDashboard();
+  const [view, setView] = useState<View>("dashboard");
+
+  // Record (or update) the application for the current session result.
+  const handleResult = useCallback(
+    (result: SessionResult) => {
+      if (!activeMerchant) return;
+      const app = applicationFromResult(activeMerchant, result);
+      const existing = activeApplications.find((a) => a.id === app.id);
+      if (existing) {
+        updateApplication(app.id, app);
+      } else {
+        addApplication(app);
+      }
+    },
+    [activeMerchant, activeApplications, addApplication, updateApplication]
+  );
+
+  const openApplication = useCallback((_application: LoanApplication) => {
+    // Opening an existing application re-enters the copilot view for context.
+    setView("copilot");
+  }, []);
+
+  if (!activeMerchant) {
+    return <div className="app app--loading">Loading dashboard…</div>;
+  }
+
+  if (view === "copilot") {
+    return (
+      <CopilotView
+        merchant={activeMerchant}
+        onBack={() => setView("dashboard")}
+        onResult={handleResult}
+      />
+    );
+  }
 
   return (
-    <div className="app">
-      <header className="app__header">
-        <div>
-          <h1 className="app__title">WeBank Loan Copilot</h1>
-          <p className="app__subtitle">
-            Cash-flow simulator for MSMEs — not financial advice
-          </p>
-        </div>
-        <div className="app__header-right">
-          <StatusBadge status={result?.status ?? null} />
-          <button
-            type="button"
-            className="app__reset"
-            onClick={reset}
-            title="Event-kill switch (PIPL)"
-          >
-            New session
-          </button>
-        </div>
-      </header>
-
-      <DatasetPicker value={dataset} onChange={setDataset} onUsePrompt={setDraft} />
-
-      <main className="app__main">
-        <ChatWindow messages={messages} thinking={thinking} />
-      </main>
-
-      <footer className="app__footer">
-        <Composer value={draft} onChange={setDraft} onSend={send} disabled={thinking} />
-        <p className="app__disclaimer">
-          {USE_MOCKS ? "Local mock engine" : "Live backend engine"} · WeBank submission is simulated ·
-          data purged after each session (PIPL)
-        </p>
-      </footer>
-    </div>
+    <Dashboard
+      merchants={merchants}
+      activeMerchant={activeMerchant}
+      applications={activeApplications}
+      onSelectMerchant={selectMerchant}
+      onApply={() => setView("copilot")}
+      onOpenApplication={openApplication}
+    />
   );
 }

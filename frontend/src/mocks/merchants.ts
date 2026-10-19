@@ -1,14 +1,8 @@
-// Sample transaction datasets, mirroring ai/data/sample_data_*.csv.
-// Used by the mock engine and as selectable demo uploads.
+// Seed merchants for the dashboard demo. These reuse the sample cash-flow data
+// from sampleData.ts and add the dashboard-side fields (business type, payout
+// account). No real accounts — all synthetic demo values.
 
-export interface SampleDataset {
-  key: string;
-  label: string;
-  merchantId: string;
-  merchantName: string;
-  csv: string;
-  suggestedPrompt: string;
-}
+import type { Merchant } from "@/types/dashboard";
 
 const XINGFU_CSV = `month,merchant_id,merchant_name,gross_revenue_rmb,total_expenses_rmb,supplier_invoices_efapiao_rmb,net_cash_flow_rmb
 2026-04,MERCH_SH_88921,Xingfu Coffee Shop,91496.87,56222.03,39355.42,35274.84
@@ -26,21 +20,21 @@ const LIANHUA_CSV = `month,merchant_id,merchant_name,gross_revenue_rmb,total_exp
 2026-08,MERCH_BJ_44102,Lianhua Mini Mart,40422.57,28364.61,19855.23,12057.96
 2026-09,MERCH_BJ_44102,Lianhua Mini Mart,40442.92,26747.77,18723.44,13695.15`;
 
-export const SAMPLE_DATASETS: SampleDataset[] = [
+export const SEED_MERCHANTS: Merchant[] = [
   {
-    key: "xingfu",
-    label: "Xingfu Coffee Shop (approved demo)",
-    merchantId: "MERCH_SH_88921",
-    merchantName: "Xingfu Coffee Shop",
+    id: "MERCH_SH_88921",
+    name: "Xingfu Coffee Shop",
+    businessType: "Food & Beverage · Café",
+    destinationAccount: "6217 0021 4455 8821",
     csv: XINGFU_CSV,
     suggestedPrompt:
       "I need 50,000 RMB to restock coffee beans and packaging next month, 6-month tenor.",
   },
   {
-    key: "lianhua",
-    label: "Lianhua Mini Mart (adjustment demo)",
-    merchantId: "MERCH_BJ_44102",
-    merchantName: "Lianhua Mini Mart",
+    id: "MERCH_BJ_44102",
+    name: "Lianhua Mini Mart",
+    businessType: "Retail · Convenience store",
+    destinationAccount: "6228 4800 1920 4471",
     csv: LIANHUA_CSV,
     suggestedPrompt:
       "We need 120,000 RMB fast for new shelving and a fridge within 6 months.",

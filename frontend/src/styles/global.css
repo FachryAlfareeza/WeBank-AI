@@ -15,6 +15,19 @@
   box-sizing: border-box;
 }
 
+/* Visible only to screen readers (accessible labels without visual change). */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 html,
 body,
 #root {
@@ -54,6 +67,33 @@ body {
   font-size: 13px;
 }
 
+.app__privacy-badge {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--accent-2);
+  background: #0e2a22;
+  border: 1px solid var(--accent-2);
+  border-radius: 999px;
+  padding: 3px 10px;
+}
+
+.card__text--privacy {
+  margin-top: 8px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: var(--accent-2);
+  background: #0e2a2255;
+  border-left: 2px solid var(--accent-2);
+  border-radius: 6px;
+}
+
+.card__text--privacy strong {
+  color: var(--text);
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+}
+
 .app__reset {
   background: transparent;
   color: var(--muted);
@@ -89,7 +129,7 @@ body {
   font-size: 11px;
 }
 
-/* Stage indicator */
+/* Stage indicator — the three-session flow (Input → Risk/ZKP → Draft) */
 .stages {
   display: flex;
   gap: 8px;
@@ -100,18 +140,67 @@ body {
 
 .stages__item {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
   text-align: center;
-  font-size: 12px;
-  padding: 6px 4px;
-  border-radius: 8px;
+  padding: 8px 6px;
+  border-radius: 10px;
   background: var(--panel-2);
   color: var(--muted);
   border: 1px solid var(--border);
+  transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.stages__num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  background: var(--border);
+  color: var(--muted);
+}
+
+.stages__title {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.stages__hint {
+  font-size: 10px;
+  color: var(--muted);
 }
 
 .stages__item--active {
   color: var(--text);
   border-color: var(--accent);
+  background: #1a2238;
+}
+
+.stages__item--active .stages__num {
+  background: var(--accent);
+  color: #fff;
+}
+
+.stages__item--done {
+  color: var(--text);
+  border-color: var(--accent-2);
+}
+
+.stages__item--done .stages__num {
+  background: var(--accent-2);
+  color: #04231a;
+}
+
+/* When a request is blocked by the security guardrail, dim the whole flow. */
+.stages--blocked .stages__item {
+  opacity: 0.45;
+  border-color: #c0392b55;
 }
 
 /* Chat */
@@ -420,6 +509,38 @@ body {
   border-color: var(--accent);
 }
 
+.dataset__row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.dataset__file-input {
+  display: none;
+}
+
+.dataset__upload {
+  background: var(--panel-2);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.dataset__upload:hover {
+  border-color: var(--accent-2);
+}
+
+.dataset__error {
+  margin: 8px 0 0;
+  font-size: 12px;
+  color: var(--warn);
+}
+
 /* DSCR gauge */
 .gauge {
   margin-bottom: 12px;
@@ -566,5 +687,307 @@ body {
 @media (max-width: 540px) {
   .advisory__options {
     grid-template-columns: 1fr;
+  }
+}
+
+/* ============================================================
+   Dashboard (clean, formal merchant portal)
+   ============================================================ */
+
+.app--loading {
+  align-items: center;
+  justify-content: center;
+  color: var(--muted);
+}
+
+.dashboard {
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 24px 16px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.dashboard__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.dashboard__title {
+  margin: 0;
+  font-size: 22px;
+  letter-spacing: -0.01em;
+}
+
+.dashboard__subtitle {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Merchant switcher */
+.switcher {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.switcher__label {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.switcher__select {
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 10px;
+  font-size: 13px;
+  min-width: 200px;
+}
+
+/* Dashboard cards */
+.dashboard__grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.dash-card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 18px 20px;
+}
+
+.dash-card__title {
+  margin: 0 0 14px;
+  font-size: 13px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+}
+
+.dash-card__empty {
+  margin: 0;
+  color: var(--muted);
+  font-size: 13px;
+}
+
+/* Definition list (profile) */
+.dash-card__defs {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dash-def {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+}
+
+.dash-def__key {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dash-def__val {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: right;
+}
+
+.dash-def__val--mono {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-weight: 500;
+}
+
+/* Metrics (cash flow) */
+.dash-metrics {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.dash-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.dash-metric__label {
+  color: var(--muted);
+  font-size: 13px;
+}
+
+.dash-metric__value {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.dash-metric__value--accent {
+  color: var(--accent-2);
+}
+
+/* Apply CTA */
+.dashboard__cta {
+  display: flex;
+}
+
+.dashboard__apply {
+  width: 100%;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+.dashboard__apply:hover {
+  filter: brightness(1.08);
+}
+
+/* Application list */
+.applist {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.applist__item {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  cursor: pointer;
+  text-align: left;
+  color: var(--text);
+  transition: border-color 0.15s ease;
+}
+
+.applist__item:hover {
+  border-color: var(--accent);
+}
+
+.applist__main {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.applist__amount {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.applist__purpose {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.applist__meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.applist__date {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* Application status chips */
+.appstatus {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.appstatus--draft {
+  color: var(--muted);
+}
+
+.appstatus--submitted {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.appstatus--approved {
+  color: #04231a;
+  background: var(--accent-2);
+  border-color: var(--accent-2);
+}
+
+.appstatus--adjust {
+  color: #2a1d02;
+  background: var(--warn);
+  border-color: var(--warn);
+}
+
+.appstatus--rejected {
+  color: #fff;
+  background: #c0392b;
+  border-color: #c0392b;
+}
+
+/* Copilot view — back button + header layout */
+.app__header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.app__back {
+  background: transparent;
+  color: var(--muted);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 8px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.app__back:hover {
+  color: var(--text);
+  border-color: var(--accent);
+}
+
+@media (max-width: 680px) {
+  .dashboard__grid {
+    grid-template-columns: 1fr;
+  }
+  .dashboard__header {
+    flex-direction: column;
+  }
+  .switcher {
+    align-items: flex-start;
   }
 }

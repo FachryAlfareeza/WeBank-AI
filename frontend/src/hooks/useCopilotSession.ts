@@ -1,8 +1,8 @@
 import { useCallback, useState } from "react";
 import type { ChatMessage, SessionResult } from "@/types";
+import type { Merchant } from "@/types/dashboard";
 import { runMockSession } from "@/mocks/mockEngine";
 import { postSession, USE_MOCKS } from "@/services/api";
-import { SAMPLE_DATASETS, type SampleDataset } from "@/mocks/sampleData";
 
 let counter = 0;
 const id = () => `m-${Date.now()}-${counter++}`;
@@ -96,9 +96,9 @@ function resultToMessages(result: SessionResult): ChatMessage[] {
   return msgs;
 }
 
-export function useCopilotSession() {
+/** Runs the copilot session for a specific merchant (from the dashboard). */
+export function useCopilotSession(merchant: Merchant) {
   const [messages, setMessages] = useState<ChatMessage[]>([GREETING]);
-  const [dataset, setDataset] = useState<SampleDataset>(SAMPLE_DATASETS[0]);
   const [thinking, setThinking] = useState(false);
   const [result, setResult] = useState<SessionResult | null>(null);
 
@@ -109,18 +109,18 @@ export function useCopilotSession() {
       setThinking(true);
       try {
         const req = {
-          merchant_id: dataset.merchantId,
-          merchant_name: dataset.merchantName,
+          merchant_id: merchant.id,
+          merchant_name: merchant.name,
           user_input_text: text,
-          csv_text: dataset.csv,
+          csv_text: merchant.csv,
           auto_confirm: true,
         };
         const res = USE_MOCKS
           ? runMockSession({
-              merchantId: dataset.merchantId,
-              merchantName: dataset.merchantName,
+              merchantId: merchant.id,
+              merchantName: merchant.name,
               userInputText: text,
-              csv: dataset.csv,
+              csv: merchant.csv,
             })
           : await postSession(req);
         setResult(res);
@@ -134,7 +134,7 @@ export function useCopilotSession() {
         setThinking(false);
       }
     },
-    [dataset]
+    [merchant]
   );
 
   const reset = useCallback(() => {
@@ -144,5 +144,5 @@ export function useCopilotSession() {
     setThinking(false);
   }, []);
 
-  return { messages, dataset, setDataset, thinking, result, send, reset };
+  return { messages, thinking, result, send, reset };
 }
