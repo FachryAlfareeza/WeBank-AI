@@ -11,5 +11,8 @@ export default defineConfig({
   },
   server: {
     port: 5173,
+    // Fail loudly instead of silently drifting to 5174+ when 5173 is taken.
+    // A drifting port breaks the backend CORS allow-list and is confusing.
+    strictPort: true,
   },
 });
