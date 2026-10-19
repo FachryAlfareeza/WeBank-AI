@@ -54,6 +54,11 @@ function resultToMessages(result: SessionResult): ChatMessage[] {
       )
     );
   }
+  // Natural-language explanation from the LLM layer (orchestrator_v2). The rule
+  // engine stays the source of truth; this only narrates the decision.
+  if (result.llm_available && result.llm_explanation) {
+    msgs.push(assistant(`🤖 ${result.llm_explanation}`));
+  }
   if (result.zkp_proof) {
     msgs.push(
       assistant("Eligibility proven without exposing raw revenue.", {

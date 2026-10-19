@@ -125,6 +125,10 @@ export interface SessionResult {
   webank_api_payload?: Record<string, unknown> | null;
   guardrail_report?: GuardrailReport;
   kill_switch_receipt: KillSwitchReceipt;
+  /** Natural-language explanation from the Qwen2.5 LLM layer (orchestrator_v2). */
+  llm_explanation?: string | null;
+  /** Whether the LLM explanation layer was available and ran. */
+  llm_available?: boolean;
 }
 
 /** Request body for POST /api/session. */
@@ -134,4 +138,8 @@ export interface SessionRequest {
   user_input_text: string;
   csv_text: string;
   auto_confirm: boolean;
+  /** Ask the backend to include an LLM explanation of the decision. */
+  explain?: boolean;
+  /** Explanation language: "en" or "id". */
+  language?: string;
 }

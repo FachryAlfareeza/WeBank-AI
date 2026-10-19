@@ -21,6 +21,8 @@ def create_session(req: SessionRequest) -> SessionResponse:
             user_input_text=req.user_input_text,
             csv_text=req.csv_text,
             auto_confirm=req.auto_confirm,
+            explain=req.explain,
+            language=req.language,
         )
     except Exception as exc:  # noqa: BLE001 — surface parse/engine errors to the client
         raise HTTPException(status_code=400, detail=f"Session failed: {exc}") from exc

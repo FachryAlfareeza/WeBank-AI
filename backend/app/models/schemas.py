@@ -19,6 +19,10 @@ class SessionRequest(BaseModel):
     # Raw CSV content of the uploaded transactions file.
     csv_text: str = Field(..., description="Transactions CSV content (see sample_data_*.csv)")
     auto_confirm: bool = True
+    # When true, add a natural-language LLM explanation of the decision.
+    explain: bool = True
+    # Explanation language: "en" (English) or "id" (Bahasa Indonesia).
+    language: str = "en"
 
 
 class SessionResponse(BaseModel):

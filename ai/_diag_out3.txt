@@ -1,0 +1,25 @@
+﻿python.exe : `torch_dtype` is deprecated! Use `dtype` instead!
+At line:1 char:8
++ $out = & "d:\Coding\WeBank\coding\ai\.venv\Scripts\python.exe" "d:\Co ...
++        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (`torch_dtype` i...dtype` instead!:String) [], RemoteExcept 
+   ion
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+D:\Coding\WeBank\coding\ai\.venv\Lib\site-packages\peft\config.py:165: UserWarning: Unexpected keyword 
+arguments ['alora_invocation_tokens', 'arrow_config', 'ensure_weight_tying', 'kasa_config', 
+'lora_ga_config', 'monteclora_config', 'peft_version', 'use_bdlora', 'velora_config'] for class 
+LoraConfig, these are ignored. This probably means that you're loading a configuration file that was 
+saved using a higher version of the library and additional parameters have been introduced since. It is 
+highly recommended to upgrade the PEFT version before continuing (e.g. by running `pip install -U 
+peft`).
+  warnings.warn(
+python: D:\Coding\WeBank\coding\ai\.venv\Scripts\python.exe
+torch: 2.6.0+cu124 cuda: True
+transformers: 4.57.1 peft: 0.17.1
+engine imported; calling load()...
+[>] WeiyedaiLLMBridge: backend=local device=cuda:0 4bit=True dtype=float16
+[>] WeiyedaiLLMBridge: Memuat model dari Bintangdanis/qwen2.5-weiyedai-copilot-adapter...
+[OK] WeiyedaiLLMBridge: Model siap. Device: GPU (cuda:0, 4-bit)
+load returned: True is_loaded: True
+
